@@ -1,0 +1,77 @@
+/* src/components/Navbar.css */
+
+/* ... dán toàn bộ code css cũ của bạn vào đây ... */
+.custom-navbar {
+    background-color: #f0f2f5;
+    padding: 1rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-search {
+    display: flex;
+    align-items: center;
+    background: #e8e8e8;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: 420px;
+}
+.navbar-search .search-icon {
+    font-size: 1.1rem;
+    color: #666;
+    margin-right: 0.5rem;
+}
+.navbar-search .search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+}
+.navbar-right .nav-link,
+.navbar-right .dropdown-toggle {
+    color: #333 !important;
+    font-weight: 600;
+}
+.navbar-right .dropdown-toggle::after {
+    display: none;
+}
+.navbar-left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+.hamburger-btn {
+    display: none;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+}
+@media (max-width: 991.98px) {
+    .custom-navbar {
+        padding: 1rem;
+    }
+    .hamburger-btn {
+        display: block;
+    }
+    .navbar-search {
+        width: auto;
+        flex-grow: 1;
+    }
+    .navbar-right .nav-link {
+        display: none;
+    }
+}
+
+
+/* === THÊM CÁC DÒNG MỚI NÀY VÀO CUỐI FILE === */
+
+/* --- Styles for Auth Page Navbar --- */
+.auth-navbar-container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Căn giữa logo theo chiều ngang */
+}
+
+.auth-navbar-logo {
+    height: 40px; /* Điều chỉnh kích thước logo nếu cần */
+    width: auto;
+}

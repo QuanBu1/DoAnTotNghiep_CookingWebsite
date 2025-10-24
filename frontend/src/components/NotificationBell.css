@@ -1,0 +1,63 @@
+/* src/components/NotificationBell.css */
+
+.notification-dropdown .dropdown-menu {
+    width: 380px;
+    padding: 0;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.notification-dropdown .dropdown-header {
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: #f8f9fa;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.notification-item {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: normal !important;
+    transition: background-color 0.2s ease;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item.unread {
+    background-color: #eef2f7;
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+.notification-content p {
+    margin-bottom: 0.25rem;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.notification-content small {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.no-notifications-item {
+    text-align: center;
+    color: #888;
+    padding: 2rem;
+}
+
+/* === GIẢI PHÁP CUỐI CÙNG ĐỂ ẨN MŨI TÊN === */
+.dropdown-toggle.no-arrow::after {
+    display: none !important;
+}

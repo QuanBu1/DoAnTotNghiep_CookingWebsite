@@ -1,0 +1,96 @@
+/* src/pages/LessonPlayerPage.css */
+
+/* --- PHẦN THÊM MỚI --- */
+/* Áp dụng phông chữ Lora cho toàn bộ nội dung bài học */
+.lesson-content {
+    font-family: 'Lora', serif; /* <-- Phông chữ mới cho văn bản thường */
+    color: #333; /* Làm màu chữ đậm hơn một chút để dễ đọc hơn */
+}
+
+/* Áp dụng phông chữ Montserrat cho các tiêu đề (chữ to) */
+.lesson-content h1,
+.lesson-content h2,
+.lesson-content h3,
+.lesson-content h4,
+.lesson-content h5 {
+    font-family: 'Montserrat', sans-serif; /* <-- Phông chữ mới cho tiêu đề */
+}
+
+/* CSS cho hình ảnh giữ nguyên */
+.lesson-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 2rem auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* === NÚT ĐIỀU HƯỚNG BÀI HỌC (NỔI) === */
+.floating-nav-btn {
+    position: fixed;
+    bottom: 25px;
+    z-index: 998;
+    
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    
+    opacity: 0; /* Mặc định ẩn */
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+    visibility: hidden;
+}
+
+/* Class 'visible' sẽ làm nút hiện ra */
+.floating-nav-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.floating-nav-btn:hover {
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Nút "Bài tiếp theo" (bên phải) --- */
+.floating-next-lesson-btn {
+    right: 100px;
+    background: linear-gradient(45deg, var(--orange-primary), var(--orange-dark));
+}
+
+.floating-next-lesson-btn .arrow-icon {
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.floating-next-lesson-btn:hover .arrow-icon {
+    transform: translateX(5px);
+}
+
+/* --- Nút "Bài trước" (bên trái) --- */
+.floating-prev-lesson-btn {
+    left: 25px; /* Giữ nguyên cho màn hình điện thoại */
+    background: linear-gradient(45deg, #6c757d, #343a40); /* Màu xám */
+}
+
+/* Thêm media query để căn chỉnh lại trên màn hình lớn hơn */
+@media (min-width: 992px) {
+    .floating-prev-lesson-btn {
+        left: 100px; /* Đẩy nút vào trong trên màn hình máy tính */
+    }
+}
+
+.floating-prev-lesson-btn:hover .arrow-icon {
+    transform: translateX(-5px);
+}

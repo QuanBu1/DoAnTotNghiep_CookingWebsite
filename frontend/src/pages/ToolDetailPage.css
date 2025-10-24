@@ -1,0 +1,192 @@
+/* src/pages/ToolDetailPage.css */
+
+.tool-detail-page {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Section 1: Ảnh và Mua hàng --- */
+.main-image {
+    max-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    background-color: #f8f8f8; /* Nền nhẹ cho ảnh */
+    padding: 1rem;
+}
+
+.thumbnail-gallery {
+    /* Đảm bảo ảnh nhỏ cùng kích cỡ */
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+.thumbnail-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.thumbnail-image:hover {
+    border-color: #007bff;
+    transform: scale(1.05);
+}
+
+.tool-price {
+    color: #f44336; /* Màu đỏ nổi bật cho giá */
+    font-weight: 700;
+}
+
+.tool-original-price {
+    font-size: 1rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.timer-box {
+    border: 2px solid #f44336 !important;
+    background-color: #fff3f0 !important;
+    color: #f44336 !important;
+    padding: 0.5rem 1rem !important;
+}
+
+.timer-item {
+    font-size: 1.5rem;
+    padding: 0 0.5rem;
+}
+
+/* --- Section 2: Thông tin chi tiết --- */
+.tool-feature-title {
+    color: #2a5d9d; /* Màu xanh đậm */
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+}
+
+/* THÊM MỚI: Cho khối giá dính nhẹ khi cuộn */
+.sticky-top-custom {
+    position: sticky;
+    top: 100px; /* Cách mép trên 100px */
+}
+
+/* --- Section 3: Sản phẩm liên quan --- */
+.related-tool-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.related-tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.related-tool-image {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* --- BỔ SUNG & TỐI ƯU: STYLE CHO NỘI DUNG RICH TEXT (CKEDITOR/HTML) --- */
+.tool-long-description {
+    /* CẢI TIẾN: Áp dụng font Lora, tăng nhẹ font size và tối màu chữ */
+    font-family: 'Lora', serif; /* Áp dụng font serif cho nội dung chính */
+    font-size: 1.05rem; /* Hơi lớn hơn một chút */
+    line-height: 1.75; /* Tăng line-height để dễ đọc hơn */
+    color: #212529; /* Màu chữ gần như đen (tối hơn #495057) */
+    
+    width: 100%; 
+    max-width: 100%; 
+    overflow-x: hidden; 
+}
+
+/* Căn chỉnh và tạo khoảng cách cho các khối nội dung */
+.tool-long-description p,
+.tool-long-description ul,
+.tool-long-description ol,
+.tool-long-description blockquote {
+    margin-bottom: 1.25rem; /* Tăng khoảng cách dưới cho các đoạn/khối */
+    word-break: break-word;
+}
+
+/* Style cho Tiêu đề */
+.tool-long-description h1,
+.tool-long-description h2,
+.tool-long-description h3 {
+    /* CẢI TIẾN: Áp dụng font Montserrat cho tiêu đề để tạo sự tương phản */
+    font-family: 'Montserrat', sans-serif; 
+    color: #1a3b5d;
+    font-weight: 800; /* Làm tiêu đề đậm hơn */
+    margin-top: 2.5rem; /* Tăng khoảng cách trên */
+    margin-bottom: 1rem;
+}
+
+.tool-long-description h1 { font-size: 2rem; }
+.tool-long-description h2 { 
+    font-size: 1.6rem; 
+    border-bottom: 2px solid #007bff; /* Thay đổi style gạch chân */
+    padding-bottom: 0.5rem; 
+    color: #007bff; /* Đổi màu H2 thành màu nhấn */
+}
+.tool-long-description h3 { font-size: 1.4rem; }
+
+/* Style cho In đậm và In nghiêng */
+.tool-long-description strong, .tool-long-description b {
+    /* FIX: Thay đổi màu chữ từ đỏ sang màu chữ chính */
+    color: #212529; /* Màu đen đậm để in đậm nổi bật */
+    font-weight: 700;
+}
+.tool-long-description em, .tool-long-description i {
+    font-style: italic;
+    color: #6c757d;
+}
+
+/* Style cho List (Danh sách) */
+.tool-long-description ul, .tool-long-description ol {
+    padding-left: 30px; /* Tăng indent */
+}
+.tool-long-description ul li {
+    list-style-type: disc;
+    margin-bottom: 0.75rem; /* Tăng khoảng cách giữa các mục list */
+}
+.tool-long-description ol li {
+    list-style-type: decimal;
+    margin-bottom: 0.75rem;
+}
+
+/* Style cho Blockquote (Trích dẫn) */
+.tool-long-description blockquote {
+    border-left: 5px solid #007bff; /* Tăng độ dày gạch chân */
+    padding: 15px 25px; /* Tăng padding */
+    margin: 2rem 0;
+    background-color: #f8f9fa;
+    font-style: italic;
+    color: #5a5a5a; /* Chữ trích dẫn màu xám đậm hơn */
+}
+
+/* Đảm bảo ảnh kéo dài hết chiều rộng container */
+.tool-long-description img {
+    max-width: 100%; 
+    width: 100% !important; /* Buộc ảnh kéo hết cỡ */
+    height: auto;
+    display: block; 
+    margin: 2rem auto; /* Tăng khoảng cách margin */
+    border-radius: 12px; /* Bo góc mềm hơn */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Kéo giãn bảng hết cỡ */
+.tool-long-description table {
+    width: 100% !important; 
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+/* Cho phép code block xuống dòng mềm mại */
+.tool-long-description pre {
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+}
+/* --- KẾT THÚC STYLE CHO NỘI DUNG RICH TEXT --- */

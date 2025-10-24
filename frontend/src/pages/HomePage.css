@@ -1,0 +1,157 @@
+/* src/pages/HomePage.css */
+.home-page {
+    background-color: #ffffff;
+}
+
+/* --- TÙY CHỈNH CHUNG --- */
+.home-section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 0.75rem;
+    display: inline-block;
+}
+
+.home-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: var(--orange-primary);
+    border-radius: 2px;
+}
+
+.course-category-title {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #34495e;
+    border-left: 4px solid var(--orange-primary);
+    padding-left: 1rem;
+}
+
+
+/* --- CÁC KHU VỰC (SECTION) --- */
+.hero-section {
+    padding: 2rem 0;
+    background-color: #f8f9fa; /* Màu nền xám nhạt */
+}
+
+.feature-section {
+    padding: 4rem 0;
+}
+
+.course-section {
+    padding: 4rem 0;
+    background-color: #f8f9fa;
+}
+
+/* --- FEATURE CARDS --- */
+.feature-card {
+    border: none;
+    border-radius: 15px;
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--orange-primary);
+    margin-bottom: 1.5rem;
+}
+
+.feature-card h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: #343a40;
+}
+
+/* --- COMMUNITY CTA BANNER --- */
+.community-cta-section {
+    padding: 5rem 0;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.4)), url('/public/images/banner3.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.community-cta-section h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+}
+
+/* --- STYLE CŨ CHO LƯỚI KHÓA HỌC (giữ lại và tinh chỉnh) --- */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.course-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+.course-card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.course-card-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.course-card-body {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column; /* Quan trọng để đẩy giá xuống dưới */
+}
+
+.course-card-body h5 {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    flex-grow: 1; /* Đẩy các phần tử khác xuống */
+}
+
+.course-card-body p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Style mới cho giá tiền */
+.course-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--bs-danger);
+    text-align: right; /* Căn phải cho đẹp */
+    margin-top: auto; /* Đẩy giá xuống cuối card */
+}

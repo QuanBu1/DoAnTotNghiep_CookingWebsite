@@ -1,0 +1,51 @@
+/* src/theme.css */
+/* Định nghĩa các biến màu cam chủ đạo */
+:root {
+  --orange-primary: #f57c00; /* Màu cam chính (giống Shopee) */
+  --orange-dark: #e65100;    /* Cam đậm hơn khi hover */
+  --orange-light: #fff3e0;   /* Cam rất nhạt cho nền */
+
+  /* Ghi đè các màu mặc định của Bootstrap */
+  --bs-primary: var(--orange-primary);
+  --bs-primary-rgb: 245, 124, 0; /* Giá trị RGB của màu cam chính */
+  --bs-primary-text: #ffffff;
+  --bs-primary-bg-subtle: var(--orange-light);
+  --bs-primary-border-subtle: #ffcc80;
+
+  /* Ghi đè màu của các liên kết */
+  --bs-link-color: var(--orange-primary);
+  --bs-link-color-rgb: 245, 124, 0;
+  --bs-link-hover-color: var(--orange-dark);
+  --bs-link-hover-color-rgb: 230, 81, 0;
+}
+
+/* Ghi đè màu nút bấm */
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: var(--orange-dark);
+  --bs-btn-hover-border-color: var(--orange-dark);
+  --bs-btn-active-bg: var(--orange-dark);
+  --bs-btn-active-border-color: var(--orange-dark);
+  --bs-btn-disabled-bg: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+}
+
+/* Ghi đè màu Badge */
+.badge.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+/* Ghi đè màu nền */
+.bg-primary {
+    background-color: var(--bs-primary) !important;
+}

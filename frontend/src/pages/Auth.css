@@ -1,0 +1,51 @@
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 56px - 72px);
+  padding: 2rem 0;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.auth-image-container {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .auth-image-container {
+    display: block !important;
+    /* Đường dẫn tuyệt đối từ thư mục public */
+    background-image: url('/public/images/auth-background.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+  }
+}
+
+.auth-form-container {
+  padding: 2.5rem;
+}
+
+.input-group-text {
+  background-color: transparent !important;
+  border-right: none !important;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15) !important;
+}
+
+.form-control {
+  border-left: none !important;
+}
+

@@ -1,0 +1,111 @@
+/* src/components/Footer.css */
+
+.main-footer {
+    background-color: #FFF8F0; 
+    color: #5a5a5a;
+    padding-top: 4rem;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    border-top: 1px solid #EAE0D5;
+}
+
+.footer-col {
+    margin-bottom: 2rem;
+}
+
+/* Cột giới thiệu */
+.about-col .footer-logo-img {
+    height: 40px;
+    width: auto;
+}
+
+.about-col p {
+    line-height: 1.7;
+}
+
+/* Tiêu đề các cột */
+.footer-col-title {
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+}
+
+/* Các liên kết trong footer */
+.footer-col .nav-link {
+    padding: 0.3rem 0;
+    color: #5a5a5a;
+    transition: all 0.2s ease-in-out;
+}
+
+.footer-col .nav-link:hover {
+    color: var(--orange-primary);
+    transform: translateX(5px);
+}
+
+/* --- PHẦN CSS MỚI CHO THÔNG TIN LIÊN HỆ --- */
+.contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.contact-list i {
+    color: var(--orange-primary);
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    margin-top: 4px; /* Căn chỉnh icon cho đẹp hơn */
+}
+
+.contact-list span, .contact-list a {
+    color: #5a5a5a;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contact-list a:hover {
+    color: var(--orange-primary);
+}
+/* --- KẾT THÚC PHẦN CSS MỚI --- */
+
+
+/* Các icon mạng xã hội */
+.social-icons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.social-icons .nav-link {
+    color: #888;
+    font-size: 1.5rem;
+    background-color: #EAE0D5;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.social-icons .nav-link:hover {
+    color: #fff;
+    background-color: var(--orange-primary);
+    transform: translateY(-3px);
+}
+
+/* Phần chân của Footer */
+.footer-bottom {
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+    background-color: #F8F1E7;
+    text-align: center;
+    color: #777;
+    font-size: 0.85rem;
+}

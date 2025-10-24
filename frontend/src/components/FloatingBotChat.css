@@ -1,0 +1,126 @@
+/* src/components/FloatingBotChat.css */
+
+/* --- Icon Nổi --- */
+.floating-chat-icon {
+    position: fixed;
+    bottom: 95px; /* Đẩy lên cao hơn, từ 25px -> 95px */
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    z-index: 1000; /* Luôn nổi trên mọi thứ */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.floating-chat-icon:hover {
+    transform: scale(1.05);
+}
+
+/* --- Cửa sổ Chat --- */
+.chat-window-bot {
+    position: fixed;
+    bottom: 100px; /* Cách icon một khoảng */
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    
+    /* Hiệu ứng ẩn/hiện */
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.chat-window-bot.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+}
+
+.chat-header-bot {
+    padding: 1rem;
+    background: var(--orange-primary); /* Màu cam chủ đạo */
+    color: white;
+    border-bottom: 1px solid var(--orange-dark);
+}
+.chat-header-bot p {
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.2rem;
+}
+.chat-header-bot small {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-body-bot {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Tin nhắn --- */
+.chat-message {
+    display: flex;
+    margin-bottom: 1rem;
+    max-width: 90%;
+}
+
+.chat-message.user {
+    align-self: flex-end;
+}
+
+.chat-message.bot {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 0.75rem 1rem;
+    border-radius: 15px;
+    color: #333;
+    line-height: 1.4;
+    position: relative;
+}
+.message-content p {
+    margin: 0;
+}
+.message-content .time {
+    font-size: 0.7rem;
+    color: #999;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Style cho bot */
+.chat-message.bot .message-content {
+    background-color: #f0f4f8; /* Nền xám cho bot */
+    border-bottom-left-radius: 4px;
+}
+/* Style cho user */
+.chat-message.user .message-content {
+    background-color: var(--orange-light); /* Nền cam nhạt cho user */
+    color: #333;
+    border: 1px solid var(--orange-primary);
+    border-bottom-right-radius: 4px;
+}
+
+.typing-indicator {
+    font-style: italic;
+    color: #6c757d;
+    padding: 0.5rem 0;
+}
+
+.chat-footer-bot {
+    padding: 0.75rem;
+    border-top: 1px solid #e0e0e0;
+}

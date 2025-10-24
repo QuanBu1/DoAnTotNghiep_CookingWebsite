@@ -1,0 +1,168 @@
+/* src/pages/AboutPage.css */
+
+.about-page-v2 {
+    font-family: 'Lora', serif;
+    color: #4a4a4a;
+    line-height: 1.8;
+    background-color: #ffffff;
+}
+
+/* --- Hero Section --- */
+.about-hero-v2 {
+    position: relative;
+    height: 60vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('/public/images/banner9.jpg');
+    background-attachment: fixed; /* Hiệu ứng Parallax */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.about-hero-v2 h1, .about-hero-v2 .lead {
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* --- General Section Styling --- */
+.about-section-v2 {
+    padding: 5rem 0;
+}
+
+.bg-light-v2 {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.section-title-v2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+    display: inline-block;
+}
+
+.section-title-v2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 70%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--orange-primary), var(--orange-dark));
+    border-radius: 2px;
+}
+
+.about-section-v2 .text-center .section-title-v2::after {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.section-text-v2 {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+}
+
+/* --- Features Section --- */
+.feature-card-v2 {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.feature-card-v2:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon-v2 {
+    font-size: 2.5rem;
+    display: inline-block;
+    color: #fff;
+    background: linear-gradient(45deg, var(--orange-primary), var(--orange-dark));
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+}
+
+.feature-card-v2 h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: #343a40;
+}
+
+/* --- Parallax Banner Section --- */
+.parallax-banner {
+    height: 40vh;
+    min-height: 300px;
+    background-image: url('/public/images/banner.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.parallax-banner::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* --- Call to Action Section --- */
+.cta-section-v2 {
+    padding: 5rem 0;
+    /* ĐÃ SỬA: Gradient màu nâu đậm */
+    background: linear-gradient(135deg, #5C4033, #7F4E24);
+    color: white;
+}
+
+.cta-section-v2 h2, .cta-section-v2 .lead {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Nút đã được sửa ở bước trước */
+.cta-section-v2 .btn-light {
+    /* Ghi đè các biến CSS của Bootstrap để chuyển thành màu cam solid */
+    --bs-btn-color: #ffffff; /* Màu chữ trắng */
+    --bs-btn-bg: var(--orange-dark); /* Màu cam đậm */
+    --bs-btn-border-color: var(--orange-dark);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: var(--orange-primary); /* Màu cam nhẹ hơn khi hover */
+    --bs-btn-hover-border-color: var(--orange-primary);
+    --bs-btn-active-bg: var(--orange-primary);
+    --bs-btn-active-border-color: var(--orange-primary);
+    
+    font-weight: 600;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    transition: transform 0.2s ease, background-color 0.2s, border-color 0.2s;
+}
+
+.cta-section-v2 .btn-light:hover {
+    transform: scale(1.05);
+}

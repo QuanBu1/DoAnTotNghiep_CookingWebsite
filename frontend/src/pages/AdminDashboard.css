@@ -1,0 +1,54 @@
+/* src/pages/AdminDashboard.css */
+
+/* --- Container chính cho toàn bộ trang --- */
+.admin-dashboard {
+    background-color: #f0f4f8; /* Màu nền xám xanh nhẹ */
+    padding: 2rem 1rem;
+    min-height: 80vh;
+}
+
+.admin-dashboard h2 {
+    color: #1a3b5d; /* Màu xanh đậm cho tiêu đề */
+    font-weight: 700;
+}
+
+/* --- Khung chứa toàn bộ hệ thống Tab --- */
+.admin-tabs-container {
+    max-width: 1400px; /* Giới hạn chiều rộng để dễ nhìn hơn */
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 12px; /* Bo góc mềm mại */
+    box-shadow: 0 4px Rgba(0, 0, 0, 0.08); /* Đổ bóng nhẹ */
+    padding: 1rem 1.5rem 1.5rem 1.5rem; /* Thêm đệm bên trong */
+    border: 1px solid #e9ecef;
+}
+
+/* --- Tùy chỉnh các nút Tab --- */
+#admin-dashboard-tabs .nav-link {
+    color: #5a7184; /* Màu chữ xám */
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 3px solid transparent; /* Đường gạch chân ẩn */
+    transition: all 0.3s ease;
+    padding: 0.75rem 1.25rem;
+}
+
+/* Hiệu ứng khi di chuột qua nút Tab */
+#admin-dashboard-tabs .nav-link:hover {
+    color: #0056b3; /* Chuyển màu chữ khi hover */
+    background-color: #f8f9fa;
+    border-bottom: 3px solid #dee2e6;
+}
+
+/* --- Tùy chỉnh nút Tab ĐANG KÍCH HOẠT --- */
+#admin-dashboard-tabs .nav-link.active {
+    color: #007bff; /* Màu chữ của tab đang chọn */
+    background-color: #ffffff !important;
+    border-bottom: 3px solid #007bff; /* Hiện đường gạch chân màu xanh */
+}
+
+/* --- Vùng nội dung của mỗi Tab --- */
+.tab-content {
+    margin-top: 1.5rem;
+}

@@ -1,0 +1,60 @@
+/* src/components/CourseSlider.css */
+
+.course-slider-container .slick-track {
+    display: flex !important;
+}
+
+.course-slider-container .slick-slide {
+    height: inherit !important;
+    display: flex !important;
+    justify-content: center;
+    padding: 0 12px;
+}
+
+/* Đảm bảo các thẻ bên trong slide chiếm toàn bộ không gian */
+.course-slider-container .slick-slide > div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.course-slide-item {
+    padding-bottom: 10px;
+    width: 100%;
+    display: flex !important;
+}
+
+.course-slide-item .course-card-link {
+    width: 100%;
+    display: flex;
+}
+
+.course-slide-item .course-card {
+    width: 100%; /* Đảm bảo thẻ card chiếm toàn bộ chiều rộng */
+}
+
+
+/* Tùy chỉnh mũi tên điều hướng */
+.slick-prev,
+.slick-next {
+    width: 40px;
+    height: 40px;
+    background: white !important;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1;
+}
+.slick-prev:before,
+.slick-next:before {
+    color: black !important;
+    font-size: 24px;
+    opacity: 0.75;
+}
+
+/* Ẩn mũi tên trên màn hình điện thoại để gọn hơn */
+@media (max-width: 767.98px) {
+    .slick-prev,
+    .slick-next {
+        display: none !important;
+    }
+}

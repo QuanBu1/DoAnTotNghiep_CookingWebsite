@@ -1,0 +1,83 @@
+/* src/components/ReactionToolbar.css */
+
+.fb-reaction-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Khung pop-up chứa các emoji */
+.fb-reaction-popover {
+    position: absolute;
+    bottom: 100%; /* Đặt vị trí phía trên nút bấm */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 6px 10px; /* Giảm padding một chút */
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    gap: 10px; /* Tăng khoảng cách giữa các emoji */
+    z-index: 10;
+    /* Hiệu ứng xuất hiện */
+    animation: popover-appear 0.2s ease-out;
+}
+
+/* Từng emoji trong pop-up */
+.popover-emoji {
+    font-size: 1.8rem; /* <-- KÍCH THƯỚC EMOJI ĐÃ ĐƯỢC GIẢM */
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.popover-emoji:hover {
+    transform: scale(1.3) translateY(-5px); /* Phóng to và di chuyển lên khi hover */
+}
+
+/* Nút "Thích" chính */
+.like-button {
+    font-weight: 600;
+    text-decoration: none !important; /* Ghi đè các style link mặc định */
+    color: #606770 !important; /* Màu chữ mặc định */
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+/* === HIỆU ỨNG HOVER ĐÃ ĐƯỢC SỬA LẠI === */
+.like-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #606770 !important; /* Đảm bảo màu chữ không đổi khi hover */
+}
+
+/* Style khi người dùng đã thả cảm xúc */
+.like-button.reacted {
+    font-weight: bold;
+}
+
+/* Màu sắc cho từng loại cảm xúc */
+.like-button.reacted.like { color: #0866ff !important; }
+.like-button.reacted.heart { color: #f33e58 !important; }
+.like-button.reacted.haha,
+.like-button.reacted.wow,
+.like-button.reacted.sad { color: #f7b125 !important; }
+.like-button.reacted.angry { color: #e9710f !important; }
+
+.reacted-emoji {
+    margin-right: 6px;
+    font-size: 1.2rem;
+}
+
+/* Animation cho pop-up */
+@keyframes popover-appear {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.8) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1) translateY(0);
+    }
+}

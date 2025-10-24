@@ -1,0 +1,56 @@
+/* src/App.css */
+.app-layout {
+    display: block;
+    position: relative;
+}
+
+.main-content {
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 100;
+}
+
+.page-content {
+    padding: 1.5rem 2.5rem;
+    flex-grow: 1;
+}
+
+/* --- Responsive cho Desktop --- */
+@media (min-width: 992px) {
+    .app-layout.sidebar-collapsed .main-content {
+        margin-left: 80px;
+    }
+    .app-layout.sidebar-expanded .main-content {
+        margin-left: 240px;
+    }
+}
+
+/* --- Responsive cho Mobile & Tablet --- */
+@media (max-width: 991.98px) {
+    .main-content {
+        margin-left: 0 !important;
+    }
+    .page-content {
+        padding: 1rem;
+    }
+}
+
+body { 
+    margin: 0; 
+}
+
+/* === SỬA LỖI TẠI ĐÂY === */
+/* Chúng ta đặt màu nền cho thẻ #root ở đây thay vì trong HTML */
+#root { 
+    background-color: #f0f4f8 !important; 
+}

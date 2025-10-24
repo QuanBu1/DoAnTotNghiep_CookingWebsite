@@ -1,0 +1,30 @@
+/* Vỏ bọc ngoài cùng, giúp căn giữa và tạo khoảng cách */
+.carousel-container {
+  max-width: 1140px; /* Chiều rộng tối đa của carousel */
+  margin: 2rem auto;   /* Tự động căn giữa và tạo khoảng cách trên/dưới */
+  padding: 0 15px;     /* Thêm đệm hai bên trên màn hình nhỏ */
+}
+
+/* Áp dụng style cho chính component Carousel */
+.custom-carousel {
+  border-radius: 15px; /* Bo tròn các góc */
+  overflow: hidden;      /* Bắt buộc phải có để bo tròn hoạt động */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho chiều sâu */
+}
+
+/* Style cho ảnh bên trong */
+.custom-carousel-img {
+  height: 450px;       /* Chiều cao mới, bạn có thể điều chỉnh */
+  object-fit: cover;   /* Đảm bảo ảnh luôn lấp đầy mà không bị méo */
+  width: 100%;
+}
+
+/* Style cho phần chữ đè lên ảnh (caption) */
+.custom-carousel .carousel-caption {
+  /* Tạo hiệu ứng nền mờ dần từ dưới lên để chữ dễ đọc hơn */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 2rem; /* Đẩy chữ lên cao hơn một chút */
+}

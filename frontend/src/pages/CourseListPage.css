@@ -1,0 +1,89 @@
+/* src/pages/CourseListPage.css */
+
+.course-list-page {
+    background-color: #f0f4f8; /* Màu nền xanh xám nhạt */
+    min-height: 100vh;
+    
+    padding-bottom: 1rem;
+}
+
+.course-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+.course-card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 15px; /* Bo tròn góc thẻ */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    transform: translateY(-10px); /* Hiệu ứng nổi lên khi hover */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Đổ bóng đậm hơn khi hover */
+}
+
+.course-card-img-container {
+    position: relative;
+    height: 180px;
+}
+
+.course-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.course-logo-overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 90px; /* Điều chỉnh kích thước logo nếu cần */
+    height: auto;
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.course-card-body {
+    padding: 1rem 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.75rem;
+    min-height: 50px; 
+}
+
+.course-meta {
+    font-size: 0.85rem;
+    color: #6c757d; /* Màu chữ xám */
+    margin-top: auto; /* Đẩy thông tin này xuống cuối thẻ */
+    border-top: 1px solid #eee;
+    padding-top: 0.75rem;
+}
+
+.course-meta p {
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.course-meta i {
+    margin-right: 8px;
+    color: #888;
+}
