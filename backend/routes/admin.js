@@ -7,59 +7,50 @@ const adminController = require('../controllers/admin');
 // Sử dụng middleware cho tất cả các route trong file này
 router.use(authMiddleware, adminMiddleware);
 
-// GET /api/admin/users - Lấy danh sách tất cả người dùng
-router.get('/users', adminController.getAllUsers);
-
-// GET /api/admin/users/:userId - Lấy một người dùng
+// --- User Management ---
+router.get('/users', adminController.getAllUsers); // <-- API đã cập nhật
 router.get('/users/:userId', adminController.getUserById);
-
-// POST /api/admin/users - Tạo người dùng mới
 router.post('/users', adminController.createUser);
-
-// PUT /api/admin/users/:userId - Cập nhật người dùng
 router.put('/users/:userId', adminController.updateUser);
-
-// DELETE /api/admin/users/:userId - Xóa một người dùng
 router.delete('/users/:userId', adminController.deleteUser);
-// Lấy danh sách giảng viên
+// --- Instructor Management ---
+// Giữ route này để lấy danh sách giảng viên cho bộ lọc courses
 router.get('/instructors', adminController.getAllInstructors);
-
-// Admin tạo khóa học
-router.post('/courses', adminController.createCourse);
-
-// Admin cập nhật khóa học
-router.put('/courses/:courseId', adminController.updateCourse);
-
-// Admin xóa khóa học
-router.delete('/courses/:courseId', adminController.deleteCourse);
-// Lấy tất cả bình luận
-router.get('/comments', adminController.getAllComments);
-
-// Xóa một bình luận theo loại (thread/reply) và ID
-router.delete('/comments/:type/:id', adminController.deleteComment);
-
-router.get('/instructors-management', adminController.getInstructors);
+// Các route quản lý giảng viên riêng (tên route giữ nguyên, controller đã cập nhật)
+router.get('/instructors-management', adminController.getInstructors); // <-- API đã cập nhật
 router.post('/instructors-management', adminController.createInstructor);
 router.put('/instructors-management/:instructorId', adminController.updateInstructor);
 router.delete('/instructors-management/:instructorId', adminController.deleteInstructor);
-router.get('/revenue-stats', adminController.getRevenueStats);
-// Lấy tất cả đơn hàng
-// Lấy tất cả đơn hàng dụng cụ
-router.get('/orders', adminController.getAllOrders);
 
-// Lấy chi tiết một đơn hàng dụng cụ
+// --- Course Management ---
+router.get('/courses', adminController.getAllCourses); // <-- API đã cập nhật
+router.post('/courses', adminController.createCourse);
+router.put('/courses/:courseId', adminController.updateCourse);
+router.delete('/courses/:courseId', adminController.deleteCourse);
+
+// --- Kitchen Tool Management ---
+router.get('/tools', adminController.getAllTools); // <-- API đã cập nhật
+// Các route POST, PUT, DELETE cho tools nằm ở /api/tools nhưng cần adminMiddleware
+// Chúng ta sẽ giữ các route đó ở file routes/tools.js và đảm bảo middleware được áp dụng đúng
+// Tuy nhiên, hàm getToolById cũng cần thiết ở đây để xem chi tiết
+router.get('/tools/:id', adminController.getToolById); // Giữ hàm này
+
+// --- Order Management ---
+router.get('/orders', adminController.getAllOrders); // <-- API đã cập nhật
 router.get('/orders/:id', adminController.getOrderDetails);
-
-// Cập nhật trạng thái một đơn hàng dụng cụ
 router.put('/orders/:id', adminController.updateOrderStatus);
 
-// === ROUTE MỚI CHO DOANH THU DỤNG CỤ ===
+// --- Comment Management ---
+router.get('/comments', adminController.getAllComments); // <-- API đã cập nhật
+router.delete('/comments/:type/:id', adminController.deleteComment);
+
+// --- Message Management ---
+router.get('/messages', adminController.getAllMessages); // <-- API đã cập nhật
+router.get('/messages/:id', adminController.getSingleMessage);
+router.post('/messages/:id/reply', adminController.replyToMessage);
+
+// --- Statistics ---
+router.get('/revenue-stats', adminController.getRevenueStats);
 router.get('/tool-revenue', adminController.getToolRevenueStats);
 
-// === ROUTE MỚI CHO QUẢN LÝ TIN NHẮN ===
-router.get('/messages', adminController.getAllMessages);
-// === ROUTE MỚI CHO QUẢN LÝ TIN NHẮN ===
-router.get('/messages', adminController.getAllMessages);
-router.get('/messages/:id', adminController.getSingleMessage); // <-- LẤY 1 TIN NHẮN
-router.post('/messages/:id/reply', adminController.replyToMessage); // <-- GỬI PHẢN HỒI
 module.exports = router;
