@@ -155,3 +155,27 @@
     text-align: right; /* Căn phải cho đẹp */
     margin-top: auto; /* Đẩy giá xuống cuối card */
 }
+/* === THÊM CSS MỚI CHO MÔ TẢ DỤNG CỤ === */
+.tool-card-description {
+  display: -webkit-box;       /* Bật chế độ flexbox đặc biệt của WebKit */
+  -webkit-line-clamp: 3;      /* Giới hạn số dòng hiển thị là 3 */
+  -webkit-box-orient: vertical; /* Hướng các dòng theo chiều dọc */
+  overflow: hidden;           /* Ẩn phần văn bản vượt quá giới hạn */
+  text-overflow: ellipsis;    /* Hiển thị dấu "..." */
+  /* Có thể thêm chiều cao tối thiểu nếu cần để đảm bảo layout */
+  min-height: calc(1.5em * 3); /* Giả sử line-height là 1.5em, giới hạn 3 dòng */
+  line-height: 1.5em;         /* Đặt line-height cụ thể */
+  margin-bottom: 1rem;       /* Đảm bảo có khoảng cách dưới mô tả */
+}
+
+/* Đảm bảo thẻ Card.Body có đủ không gian */
+.course-card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Quan trọng để body chiếm hết không gian còn lại */
+}
+
+/* Đẩy giá và nút xuống cuối */
+.course-price {
+    margin-top: auto; /* Đẩy giá xuống dưới cùng */
+}
