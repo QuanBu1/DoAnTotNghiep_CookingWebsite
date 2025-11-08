@@ -4,21 +4,37 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Spinner, Alert, Tabs, Tab } from 'react-bootstrap';
 import AuthContext from '../context/AuthContext'; // Import AuthContext
-import '../pages/HomePage.css'; // Tái sử dụng CSS
+import './CommunityRecipesPage.css'; // <-- THÊM CSS MỚI
 
-// Component con để hiển thị một card công thức (tái sử dụng)
+// Component con để hiển thị một card công thức (ĐÃ CẬP NHẬT)
 const RecipeCard = ({ recipe }) => (
-    <Link to={`/community-recipes/${recipe.id}`} className="course-card-link">
-        <div className="course-card">
+    // THAY ĐỔI: Sử dụng class mới 'recipe-card-link'
+    <Link to={`/community-recipes/${recipe.id}`} className="recipe-card-link">
+        {/* THAY ĐỔI: Sử dụng class mới 'recipe-card' */}
+        <div className="recipe-card">
+            {/* THAY ĐỔI: Sử dụng class mới 'recipe-card-image' */}
             <img
                 src={recipe.image_url || '/images/banner4.jpg'}
                 alt={recipe.title}
-                className="course-card-image"
+                className="recipe-card-image"
             />
-            <div className="course-card-body">
+            {/* THAY ĐỔI: Sử dụng class mới 'recipe-card-body' */}
+            <div className="recipe-card-body">
                 <h5>{recipe.title}</h5>
-                <p className="text-muted small">Tác giả: <strong>{recipe.author_name}</strong></p>
-                <p className="small">{recipe.description}</p>
+                {/* THAY ĐỔI: Sử dụng class mới 'recipe-card-description' */}
+                <p className="recipe-card-description">
+                    {recipe.description || 'Chưa có mô tả cho món ăn này...'}
+                </p>
+                
+                {/* THÊM MỚI: Footer cho Card với Avatar và Tên tác giả */}
+                <div className="recipe-card-footer">
+                    <img 
+                        src="/images/student-avatar.jpg" // (Sử dụng avatar mặc định)
+                        alt={recipe.author_name}
+                        className="recipe-author-avatar"
+                    />
+                    <span className="recipe-author-name">{recipe.author_name}</span>
+                </div>
             </div>
         </div>
     </Link>
@@ -66,19 +82,26 @@ const CommunityRecipesPage = () => {
     if (error) return <Container><Alert variant="danger">{error}</Alert></Container>;
 
     return (
-        <div className="section">
-            <h1 className="section-title">Công thức từ Cộng đồng</h1>
+        // THAY ĐỔI: Thêm class 'community-page' để bọc
+        <div className="section community-page">
+            {/* THAY ĐỔI: Căn giữa tiêu đề và thêm mô tả */}
+            <h1 className="section-title text-center">Công thức từ Cộng đồng</h1>
+            <p className="lead text-center text-muted mb-5">
+                Khám phá, chia sẻ và lưu lại những sáng tạo ẩm thực từ hàng ngàn đầu bếp tại gia.
+            </p>
 
             <Tabs
                 activeKey={activeTab}
                 onSelect={(k) => setActiveTab(k)}
                 id="community-recipes-tabs"
-                className="mb-4"
+                // THAY ĐỔI: Thêm class mới cho Tabs
+                className="mb-4 community-tabs"
                 justify
             >
                 <Tab eventKey="all" title={`Tất cả công thức (${allRecipes.length})`}>
                     {allRecipes.length > 0 ? (
-                        <div className="courses-grid mt-4">
+                        // THAY ĐỔI: Sử dụng class 'recipe-grid'
+                        <div className="recipe-grid mt-4">
                             {allRecipes.map(recipe => (
                                 <RecipeCard key={`all-${recipe.id}`} recipe={recipe} />
                             ))}
@@ -92,7 +115,8 @@ const CommunityRecipesPage = () => {
                 {isAuthenticated && (
                     <Tab eventKey="saved" title={`Công thức đã lưu (${savedRecipes.length})`}>
                         {savedRecipes.length > 0 ? (
-                            <div className="courses-grid mt-4">
+                            // THAY ĐỔI: Sử dụng class 'recipe-grid'
+                            <div className="recipe-grid mt-4">
                                 {savedRecipes.map(recipe => (
                                     <RecipeCard key={`saved-${recipe.id}`} recipe={recipe} />
                                 ))}

@@ -164,8 +164,18 @@ const LessonPlayerPage = () => {
                     <hr />
                     <Row>
                         <Col>
-                            {videoUrl && ( <div className="ratio ratio-16x9 mb-4 shadow-sm rounded"> <iframe src={videoUrl} title={lesson.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> </div> )}
-                            
+                            {/* === THAY ĐỔI NẰM Ở ĐÂY === */}
+                            {videoUrl && (
+                                // 1. Thêm một div bọc bên ngoài
+                                <div style={{ maxWidth: '80%', margin: '0 auto' }}>
+                                    {/* 2. Giữ nguyên div ratio bên trong */}
+                                    <div className="ratio ratio-16x9 mb-4 shadow-sm rounded"> 
+                                        <iframe src={videoUrl} title={lesson.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> 
+                                    </div>
+                                </div>
+                            )}
+                            {/* === KẾT THÚC THAY ĐỔI === */}
+
                             <div className="d-flex justify-content-end my-3">
                                 <Button variant="outline-primary" onClick={() => setIsQaPanelOpen(true)}>
                                     <i className="bi bi-patch-question-fill me-2"></i> Hỏi đáp

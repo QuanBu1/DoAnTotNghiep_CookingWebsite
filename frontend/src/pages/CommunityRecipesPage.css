@@ -1,0 +1,131 @@
+/* src/pages/CommunityRecipesPage.css */
+
+.community-page .section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem; /* Giảm margin-bottom một chút */
+    text-align: center;
+}
+
+/* Căn chỉnh lại tiêu đề và mô tả */
+.community-page .lead {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tùy chỉnh Tabs */
+.community-tabs .nav-link {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #6c757d;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.75rem 1rem;
+}
+
+.community-tabs .nav-link.active {
+    color: var(--bs-primary);
+    border-bottom-color: var(--bs-primary);
+}
+
+/* Lưới công thức mới */
+.recipe-grid {
+    display: grid;
+    /* Tối ưu cho 3 cột trên màn hình lớn, 2 cột trên tablet */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem; /* Tăng khoảng cách */
+}
+
+@media (min-width: 992px) {
+    .recipe-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.recipe-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+/* Thẻ công thức được thiết kế lại */
+.recipe-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #f0f0f0;
+}
+
+.recipe-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-card-image {
+    width: 100%;
+    height: 220px; /* Ảnh cao hơn (từ 160px) */
+    object-fit: cover;
+}
+
+.recipe-card-body {
+    padding: 1rem 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-card-body h5 {
+    font-weight: 600;
+    font-size: 1.15rem; /* Hơi to hơn 1.1rem */
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+/* Mô tả (giữ nguyên logic 3 dòng) */
+.recipe-card-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    flex-grow: 1; /* Đẩy tác giả xuống dưới */
+
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(1.5em * 3); /* 3 dòng */
+    line-height: 1.5em;
+}
+
+/* Footer của card (mới) */
+.recipe-card-footer {
+    margin-top: auto; /* Đẩy xuống cuối */
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.recipe-author-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.recipe-author-name {
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 500;
+}
