@@ -13,7 +13,7 @@ import './LessonPlayerPage.css';
 import FloatingBotChat from '../components/FloatingBotChat';
 import QandASection from '../components/QandASection';
 import SlideInPanel from '../components/SlideInPanel';
-import SubmissionTab from '../components/SubmissionTab'; // Thêm import cho tab mới
+import SubmissionTab from '../components/SubmissionTab'; 
 
 const pageVariants = { initial: { opacity: 0 }, in: { opacity: 1 }, out: { opacity: 0 } };
 const pageTransition = { duration: 0.5 };
@@ -29,18 +29,28 @@ const LessonPlayerPage = () => {
     const [error, setError] = useState('');
     const [isCompleted, setIsCompleted] = useState(false);
     const [isQaPanelOpen, setIsQaPanelOpen] = useState(false);
+    
+    // === THAY ĐỔI 1: THÊM STATE MỚI ===
     const [showNavButtons, setShowNavButtons] = useState(false);
+    const [showScrollTopButton, setShowScrollTopButton] = useState(false); // Nút cuộn lên đầu
     
     const contentEndRef = useRef(null);
 
+    // === THAY ĐỔI 2: CẬP NHẬT LOGIC SCROLL ===
     useEffect(() => {
         const handleScroll = () => {
+            // Hiển thị nút "Bài tiếp/trước" khi cuộn GẦN cuối trang
             const isScrolledToEnd = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200;
             setShowNavButtons(isScrolledToEnd);
+
+            // Hiển thị nút "Lên đầu" khi cuộn xuống QUA 300px
+            const isScrolledDown = window.scrollY > 300;
+            setShowScrollTopButton(isScrolledDown);
         };
+        
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, []); // Chỉ chạy 1 lần
 
     const fetchLessonData = useCallback(async () => {
         if (!token) return;
@@ -125,6 +135,14 @@ const LessonPlayerPage = () => {
         navigate(`/courses/${courseId}/lessons/${targetLessonId}`);
     };
 
+    // === THAY ĐỔI 3: THÊM HÀM CUỘN LÊN ĐẦU ===
+    const handleScrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
     const getYouTubeEmbedUrl = (url) => {
         if (!url) return null;
         try {
@@ -164,18 +182,14 @@ const LessonPlayerPage = () => {
                     <hr />
                     <Row>
                         <Col>
-                            {/* === THAY ĐỔI NẰM Ở ĐÂY === */}
                             {videoUrl && (
-                                // 1. Thêm một div bọc bên ngoài
                                 <div style={{ maxWidth: '80%', margin: '0 auto' }}>
-                                    {/* 2. Giữ nguyên div ratio bên trong */}
                                     <div className="ratio ratio-16x9 mb-4 shadow-sm rounded"> 
                                         <iframe src={videoUrl} title={lesson.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> 
                                     </div>
                                 </div>
                             )}
-                            {/* === KẾT THÚC THAY ĐỔI === */}
-
+                            
                             <div className="d-flex justify-content-end my-3">
                                 <Button variant="outline-primary" onClick={() => setIsQaPanelOpen(true)}>
                                     <i className="bi bi-patch-question-fill me-2"></i> Hỏi đáp
@@ -232,6 +246,15 @@ const LessonPlayerPage = () => {
                     <i className="bi bi-arrow-right-short arrow-icon"></i>
                 </Button>
             )}
+
+            {/* === THAY ĐỔI 4: THÊM NÚT CUỘN LÊN ĐẦU === */}
+            <Button 
+                onClick={handleScrollToTop}
+                className={`floating-nav-btn floating-scroll-top-btn ${showScrollTopButton ? 'visible' : ''}`}
+                title="Cuộn lên đầu trang"
+            >
+                <i className="bi bi-arrow-up-short arrow-icon"></i>
+            </Button>
 
             <SlideInPanel 
                 title="Hỏi Đáp cho bài học" 

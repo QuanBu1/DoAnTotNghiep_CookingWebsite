@@ -3,6 +3,7 @@ import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
+import { toast } from 'react-toastify'; // <-- 1. THÊM DÒNG NÀY
 
 const EditCoursePage = () => {
     const { id } = useParams();
@@ -46,7 +47,11 @@ const EditCoursePage = () => {
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
             // formData giờ đã chứa live_embed_url và sẽ được gửi đi
             await axios.put(`/api/courses/${id}`, formData, config);
-            alert('Cập nhật khóa học thành công!');
+            
+            // <-- 2. THAY THẾ DÒNG DƯỚI ĐÂY
+            // alert('Cập nhật khóa học thành công!'); (Code cũ)
+            toast.success('Cập nhật khóa học thành công!'); // (Code mới)
+            
             navigate(`/courses/${id}`);
         } catch (err) {
             setError('Cập nhật thất bại. Vui lòng thử lại.');

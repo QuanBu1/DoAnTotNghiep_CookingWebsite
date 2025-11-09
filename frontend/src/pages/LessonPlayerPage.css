@@ -1,22 +1,19 @@
 /* src/pages/LessonPlayerPage.css */
 
-/* --- PHẦN THÊM MỚI --- */
-/* Áp dụng phông chữ Lora cho toàn bộ nội dung bài học */
+/* --- PHẦN FONT CHỮ --- */
 .lesson-content {
-    font-family: 'Lora', serif; /* <-- Phông chữ mới cho văn bản thường */
-    color: #333; /* Làm màu chữ đậm hơn một chút để dễ đọc hơn */
+    font-family: 'Lora', serif; 
+    color: #333; 
 }
 
-/* Áp dụng phông chữ Montserrat cho các tiêu đề (chữ to) */
 .lesson-content h1,
 .lesson-content h2,
 .lesson-content h3,
 .lesson-content h4,
 .lesson-content h5 {
-    font-family: 'Montserrat', sans-serif; /* <-- Phông chữ mới cho tiêu đề */
+    font-family: 'Montserrat', sans-serif; 
 }
 
-/* CSS cho hình ảnh giữ nguyên */
 .lesson-content img {
     max-width: 100%;
     height: auto;
@@ -43,13 +40,12 @@
     border-radius: 50px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     
-    opacity: 0; /* Mặc định ẩn */
+    opacity: 0; 
     transform: translateY(20px);
     transition: all 0.3s ease-in-out;
     visibility: hidden;
 }
 
-/* Class 'visible' sẽ làm nút hiện ra */
 .floating-nav-btn.visible {
     opacity: 1;
     transform: translateY(0);
@@ -80,17 +76,81 @@
 
 /* --- Nút "Bài trước" (bên trái) --- */
 .floating-prev-lesson-btn {
-    left: 25px; /* Giữ nguyên cho màn hình điện thoại */
+    left: 25px; 
     background: linear-gradient(45deg, #6c757d, #343a40); /* Màu xám */
 }
 
-/* Thêm media query để căn chỉnh lại trên màn hình lớn hơn */
 @media (min-width: 992px) {
     .floating-prev-lesson-btn {
-        left: 100px; /* Đẩy nút vào trong trên màn hình máy tính */
+        left: 100px; 
     }
 }
 
 .floating-prev-lesson-btn:hover .arrow-icon {
     transform: translateX(-5px);
+}
+
+
+/* === NÚT LÊN ĐẦU TRANG (ĐÃ SỬA LỖI CĂN GIỮA) === */
+.floating-scroll-top-btn {
+    /* Vị trí */
+    right: 25px; 
+    bottom: 170px; /* Đặt cao hơn nút chat */
+    z-index: 998; 
+
+    /* Màu sắc */
+    background: linear-gradient(45deg, #495057, #212529); /* Đổi sang màu xám đậm hơn */
+    color: white;
+
+    /* Kích thước */
+    width: 50px; 
+    height: 50px;
+    
+    /* === FIX LỖI CĂN GIỮA BẰNG FLEXBOX === */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Xóa padding cũ */
+    
+    /* Hiệu ứng */
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0; 
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+    visibility: hidden;
+}
+
+.floating-scroll-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.floating-scroll-top-btn:hover {
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon mũi tên bên trong */
+.floating-scroll-top-btn .arrow-icon {
+    margin: 0; 
+    line-height: 1;
+    font-size: 1.8rem; /* Tăng kích thước icon */
+    font-weight: bold;
+}
+
+/* Điều chỉnh vị trí trên màn hình nhỏ */
+@media (max-width: 767.98px) {
+    .floating-scroll-top-btn {
+        bottom: 160px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+    }
+    .floating-scroll-top-btn .arrow-icon {
+        font-size: 1.5rem; 
+    }
 }

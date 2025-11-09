@@ -37,7 +37,7 @@ app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/user-recipes', require('./routes/userRecipes'));
 app.use('/api/contact', require('./routes/contact'));
-
+app.use('/api/ai', require('./routes/ai'));
 
 const GLOBAL_NOTIFICATION_ROOM = 'global_notifications';
 
