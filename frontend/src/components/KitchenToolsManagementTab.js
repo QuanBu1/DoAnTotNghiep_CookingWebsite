@@ -1,10 +1,11 @@
 // src/components/KitchenToolsManagementTab.js
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap'; // Thêm imports
+import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import ToolModal from './ToolModal';
-import AdminPagination from './AdminPagination'; // Import
+import AdminPagination from './AdminPagination';
+import ConfirmDeleteModal from './ConfirmDeleteModal'; // <-- 1. IMPORT MODAL MỚI
 
 const KitchenToolsManagementTab = () => {
     const [tools, setTools] = useState([]);
@@ -12,32 +13,33 @@ const KitchenToolsManagementTab = () => {
     const [error, setError] = useState('');
     const { token } = useContext(AuthContext);
 
-    // State cho modal
     const [showModal, setShowModal] = useState(false);
     const [editingTool, setEditingTool] = useState(null);
 
-    // State cho tìm kiếm, phân trang
+    // --- 2. THÊM STATE CHO MODAL XÓA ---
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingToolId, setDeletingToolId] = useState(null);
+    // ------------------------------------
+
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [limit] = useState(10);
 
+    // ... (Giữ nguyên các hàm: fetchTools, useEffect, handlePageChange, handleSearch, handleSearchInputChange, handleSearchKeyPress, handleEdit, handleAddNew) ...
     const fetchTools = useCallback(async (page = 1, search = searchTerm) => {
         setLoading(true);
         try {
             setError('');
             const config = {
-                // Không cần token cho GET all tools nếu API public, nhưng gửi cũng không sao
-                // headers: { 'Authorization': `Bearer ${token}` },
                 params: {
                     page,
                     limit,
                     search: search.trim()
-                    // Không có filter cho tools
                 }
             };
-            const res = await axios.get('/api/admin/tools', config); // Gọi API admin đã cập nhật
+            const res = await axios.get('/api/admin/tools', config); 
             setTools(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
             setCurrentPage(res.data.pagination.currentPage);
@@ -51,14 +53,13 @@ const KitchenToolsManagementTab = () => {
         } finally {
             setLoading(false);
         }
-    }, [limit, searchTerm]); // Bỏ token nếu API GET là public
+    }, [limit, searchTerm]);
 
     useEffect(() => {
         fetchTools(currentPage, searchTerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage]); // Chỉ fetch lại khi trang thay đổi
+    }, [currentPage]); 
 
-    // Handlers tương tự
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -77,25 +78,32 @@ const KitchenToolsManagementTab = () => {
             handleSearch();
         }
     };
-
-    // Handlers modal và delete giữ nguyên
+    
     const handleEdit = (tool) => {
         setEditingTool(tool);
         setShowModal(true);
     };
 
-    const handleDelete = async (toolId) => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa dụng cụ ID: ${toolId}?`)) {
-            try {
-                // Cần token để xóa
-                const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                await axios.delete(`/api/tools/${toolId}`, config); // API delete nằm ở /api/tools
-                fetchTools(currentPage, searchTerm); // Tải lại
-            } catch (err) {
-                setError(err.response?.data?.msg || 'Xóa dụng cụ thất bại.');
-            }
+    // --- 3. SỬA LẠI HÀM XÓA ---
+    const handleDelete = (toolId) => {
+        setDeletingToolId(toolId);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!deletingToolId) return;
+        try {
+            const config = { headers: { 'Authorization': `Bearer ${token}` } };
+            await axios.delete(`/api/tools/${deletingToolId}`, config); // API delete nằm ở /api/tools
+            fetchTools(currentPage, searchTerm); // Tải lại
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Xóa dụng cụ thất bại.');
+        } finally {
+            setShowDeleteModal(false);
+            setDeletingToolId(null);
         }
     };
+    // ----------------------------
 
     const handleAddNew = () => {
         setEditingTool(null);
@@ -104,7 +112,7 @@ const KitchenToolsManagementTab = () => {
 
     return (
         <>
-            {/* Thanh công cụ */}
+            {/* Thanh công cụ (Giữ nguyên) */}
             <Row className="mb-3 g-2 align-items-center">
                 <Col md="auto">
                     <Button variant="primary" onClick={handleAddNew}>+ Thêm Dụng cụ</Button>
@@ -127,13 +135,13 @@ const KitchenToolsManagementTab = () => {
 
             {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 
-            {/* Thông tin tổng số và loading */}
+            {/* Thông tin tổng số và loading (Giữ nguyên) */}
             <div className="d-flex justify-content-between align-items-center mb-2">
                  <small className="text-muted">Hiển thị {tools.length} trên tổng số {totalItems} dụng cụ</small>
                  {loading && <Spinner animation="border" size="sm" />}
             </div>
 
-            {/* Bảng dữ liệu */}
+            {/* Bảng dữ liệu (Giữ nguyên) */}
             <Table striped bordered hover responsive>
                  <thead>
                     <tr>
@@ -161,6 +169,7 @@ const KitchenToolsManagementTab = () => {
                             <td>
                                 <ButtonGroup size="sm">
                                     <Button variant="outline-primary" onClick={() => handleEdit(tool)} title="Sửa"><i className="bi bi-pencil-fill"></i></Button>
+                                    {/* 4. Sửa nút Xóa */}
                                     <Button variant="outline-danger" onClick={() => handleDelete(tool.id)} title="Xóa"><i className="bi bi-trash-fill"></i></Button>
                                 </ButtonGroup>
                             </td>
@@ -181,19 +190,28 @@ const KitchenToolsManagementTab = () => {
                 </tbody>
             </Table>
 
-            {/* Phân trang */}
+            {/* Phân trang (Giữ nguyên) */}
             <AdminPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
 
-            {/* Modal thêm/sửa */}
+            {/* Modal thêm/sửa (Giữ nguyên) */}
             <ToolModal
                 show={showModal}
                 handleClose={() => setShowModal(false)}
                 tool={editingTool}
-                onSave={() => fetchTools(editingTool ? currentPage : 1)} // Tải lại trang 1 nếu thêm mới
+                onSave={() => fetchTools(editingTool ? currentPage : 1)} 
+            />
+
+            {/* 5. THÊM MODAL XÁC NHẬN VÀO CUỐI */}
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                title="Xác nhận Xóa Dụng cụ"
+                message={`Bạn có chắc chắn muốn xóa dụng cụ ID: ${deletingToolId}?`}
             />
         </>
     );

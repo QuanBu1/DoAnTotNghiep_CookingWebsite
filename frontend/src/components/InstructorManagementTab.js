@@ -1,11 +1,12 @@
 // src/components/InstructorManagementTab.js
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap'; // Thêm Form, InputGroup, Row, Col, Spinner
+import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import AddInstructorModal from './AddInstructorModal';
 import EditInstructorModal from './EditInstructorModal';
-import AdminPagination from './AdminPagination'; // Import component phân trang
+import AdminPagination from './AdminPagination';
+import ConfirmDeleteModal from './ConfirmDeleteModal'; // <-- 1. IMPORT MODAL MỚI
 
 const InstructorManagementTab = () => {
     const [instructors, setInstructors] = useState([]);
@@ -18,6 +19,11 @@ const InstructorManagementTab = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editingInstructor, setEditingInstructor] = useState(null);
 
+    // --- 2. THÊM STATE CHO MODAL XÓA ---
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingInstructorId, setDeletingInstructorId] = useState(null);
+    // ------------------------------------
+
     // State cho tìm kiếm và phân trang
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +31,7 @@ const InstructorManagementTab = () => {
     const [totalItems, setTotalItems] = useState(0);
     const [limit] = useState(10);
 
+    // ... (Giữ nguyên các hàm: fetchInstructors, useEffect, handlePageChange, handleSearch, handleSearchInputChange, handleSearchKeyPress) ...
     const fetchInstructors = useCallback(async (page = 1, search = searchTerm) => {
         setLoading(true);
         try {
@@ -35,10 +42,9 @@ const InstructorManagementTab = () => {
                     page,
                     limit,
                     search: search.trim()
-                    // Không cần filter vì luôn là instructor
                 }
             };
-            const res = await axios.get('/api/admin/instructors-management', config); // API đã cập nhật
+            const res = await axios.get('/api/admin/instructors-management', config);
             setInstructors(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
             setCurrentPage(res.data.pagination.currentPage);
@@ -59,7 +65,7 @@ const InstructorManagementTab = () => {
             fetchInstructors(currentPage, searchTerm);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, currentPage]); // Bỏ fetchInstructors và searchTerm
+    }, [token, currentPage]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -79,28 +85,38 @@ const InstructorManagementTab = () => {
             handleSearch();
         }
     };
-
-    // Các hàm xử lý modal giữ nguyên
+    
     const handleEdit = (instructor) => {
         setEditingInstructor(instructor);
         setShowEditModal(true);
     };
 
-    const handleDelete = async (instructorId) => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa giảng viên ID: ${instructorId}?`)) {
-            try {
-                const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                await axios.delete(`/api/admin/instructors-management/${instructorId}`, config);
-                fetchInstructors(currentPage, searchTerm); // Tải lại trang hiện tại
-            } catch (err) {
-                setError(err.response?.data?.msg || 'Xóa giảng viên thất bại.');
-            }
+    // --- 3. SỬA LẠI HÀM XÓA ---
+    // Hàm này chỉ mở modal
+    const handleDelete = (instructorId) => {
+        setDeletingInstructorId(instructorId);
+        setShowDeleteModal(true);
+    };
+
+    // Hàm này thực hiện logic xóa
+    const confirmDelete = async () => {
+        if (!deletingInstructorId) return;
+        try {
+            const config = { headers: { 'Authorization': `Bearer ${token}` } };
+            await axios.delete(`/api/admin/instructors-management/${deletingInstructorId}`, config);
+            fetchInstructors(currentPage, searchTerm); // Tải lại trang hiện tại
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Xóa giảng viên thất bại.');
+        } finally {
+            setShowDeleteModal(false);
+            setDeletingInstructorId(null);
         }
     };
+    // ----------------------------
 
     return (
         <>
-            {/* Thanh công cụ */}
+            {/* Thanh công cụ (Giữ nguyên) */}
             <Row className="mb-3 g-2 align-items-center">
                 <Col md="auto">
                     <Button variant="primary" onClick={() => setShowAddModal(true)}>+ Thêm giảng viên</Button>
@@ -123,13 +139,13 @@ const InstructorManagementTab = () => {
 
             {error && <Alert variant="danger">{error}</Alert>}
 
-            {/* Thông tin tổng số và loading */}
+            {/* Thông tin tổng số và loading (Giữ nguyên) */}
             <div className="d-flex justify-content-between align-items-center mb-2">
                  <small className="text-muted">Hiển thị {instructors.length} trên tổng số {totalItems} giảng viên</small>
                  {loading && <Spinner animation="border" size="sm" />}
             </div>
 
-            {/* Bảng dữ liệu */}
+            {/* Bảng dữ liệu (Giữ nguyên) */}
             <Table striped bordered hover responsive>
                  <thead>
                     <tr>
@@ -150,6 +166,7 @@ const InstructorManagementTab = () => {
                             <td>
                                 <ButtonGroup size="sm">
                                     <Button variant="outline-primary" onClick={() => handleEdit(instructor)} title="Sửa"><i className="bi bi-pencil-fill"></i></Button>
+                                    {/* 4. Sửa nút Xóa để gọi hàm mới */}
                                     <Button variant="outline-danger" onClick={() => handleDelete(instructor.id)} title="Xóa"><i className="bi bi-trash-fill"></i></Button>
                                 </ButtonGroup>
                             </td>
@@ -170,16 +187,25 @@ const InstructorManagementTab = () => {
                 </tbody>
             </Table>
 
-            {/* Phân trang */}
+            {/* Phân trang (Giữ nguyên) */}
             <AdminPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
 
-            {/* Modals */}
+            {/* Modals (Giữ nguyên) */}
             <AddInstructorModal show={showAddModal} handleClose={() => setShowAddModal(false)} onInstructorAdded={() => fetchInstructors(1)} />
             <EditInstructorModal show={showEditModal} handleClose={() => setShowEditModal(false)} instructor={editingInstructor} onInstructorUpdated={() => fetchInstructors(currentPage, searchTerm)} />
+        
+            {/* 5. THÊM MODAL XÁC NHẬN VÀO CUỐI */}
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                title="Xác nhận Xóa Giảng viên"
+                message={`Bạn có chắc chắn muốn xóa giảng viên ID: ${deletingInstructorId}? Các khóa học của họ sẽ không bị xóa nhưng cần được gán lại.`}
+            />
         </>
     );
 };

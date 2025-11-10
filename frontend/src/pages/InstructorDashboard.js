@@ -4,7 +4,7 @@ import { Container, Tabs, Tab } from 'react-bootstrap'; // <-- THÊM Tabs, Tab
 import InstructorCourseManagement from '../components/InstructorCourseManagement';
 import SubmissionGradingTab from '../components/SubmissionGradingTab'; // <-- THÊM DÒNG NÀY
 import './InstructorDashboard.css';
-
+import InstructorCommentTab from '../components/InstructorCommentTab';
 const InstructorDashboard = () => {
     return (
         <div className="instructor-dashboard">
@@ -18,6 +18,10 @@ const InstructorDashboard = () => {
                         </Tab>
                         <Tab eventKey="grading" title="✅ Chấm bài Thực hành">
                             <SubmissionGradingTab />
+                        </Tab>
+                        {/* THÊM TAB MỚI TẠI ĐÂY */}
+                        <Tab eventKey="comments" title="💬 Bình luận & Hỏi đáp">
+                            <InstructorCommentTab />
                         </Tab>
                     </Tabs>
                 </div>

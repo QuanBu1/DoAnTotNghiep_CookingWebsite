@@ -1,0 +1,154 @@
+/* src/components/QandASection.css */
+
+/* 1. Tổng thể Card: Bỏ bo viền, shadow, vì nó nằm trong panel */
+.qanda-section-card {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important; /* Trong suốt để lấy nền panel */
+}
+
+/* 2. Form đăng câu hỏi (chỉnh chu) */
+.qanda-post-form textarea {
+    border-radius: 18px;
+    background-color: #f0f2f5; /* Màu nền xám nhẹ */
+    border: none;
+    padding: 12px 18px;
+    transition: all 0.2s ease;
+}
+.qanda-post-form textarea:focus {
+    box-shadow: 0 0 0 2px var(--bs-primary-bg-subtle);
+    background-color: #fff;
+}
+
+/* 3. Danh sách các chủ đề (chỉnh chu) */
+.qanda-thread-list {
+    margin-top: 2rem;
+}
+
+/* 4. Mỗi chủ đề (câu hỏi) (chỉnh chu, sinh động) */
+.qanda-thread {
+    display: flex;
+    gap: 12px; /* Khoảng cách giữa avatar và nội dung */
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef; /* Phân tách các thread */
+}
+.qanda-thread:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* 5. Avatar (sinh động) */
+.qanda-avatar {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.qanda-avatar.instructor {
+    background-color: #198754; /* Màu xanh lá cho GV */
+}
+.qanda-avatar.student {
+    background-color: #6c757d; /* Màu xám cho HV */
+}
+
+/* 6. Nội dung (tinh tế) */
+.qanda-content {
+    flex-grow: 1;
+}
+
+.qanda-content-bubble {
+    background-color: #f0f2f5; /* Màu nền bong bóng chat */
+    border-radius: 18px;
+    padding: 12px 16px;
+}
+
+.qanda-author {
+    font-weight: 600;
+    color: #333;
+    margin-right: 8px;
+}
+
+.qanda-content-bubble p {
+    margin: 8px 0 0 0;
+    line-height: 1.5;
+    color: #212529;
+    white-space: pre-wrap; /* Hiển thị xuống dòng */
+}
+
+/* 7. Meta (Like, time) (tinh tế) */
+.qanda-meta {
+    padding-left: 16px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+.qanda-meta .btn-link {
+    font-size: 0.85rem;
+    padding: 0;
+    text-decoration: none;
+}
+.qanda-meta .btn-link.liked {
+    font-weight: bold;
+    color: var(--bs-primary);
+}
+.qanda-meta .like-count {
+    color: #6c757d;
+}
+.qanda-meta .like-count i {
+    color: var(--bs-primary);
+}
+
+/* 8. Khu vực trả lời (chỉnh chu) */
+.qanda-replies {
+    padding-left: 52px; /* Thẳng hàng với nội dung (40px avatar + 12px gap) */
+    margin-top: 1rem;
+}
+
+/* 9. Mỗi trả lời (tinh tế) */
+.qanda-reply {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+}
+.qanda-reply .qanda-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+}
+.qanda-reply .qanda-content-bubble {
+    background-color: #e9ecef; /* Màu khác với câu hỏi */
+    padding: 8px 12px;
+}
+.qanda-reply .qanda-content-bubble p {
+    margin-top: 5px;
+}
+.qanda-reply .qanda-meta {
+    padding-left: 12px;
+}
+
+/* 10. Form trả lời (chỉnh chu) */
+.qanda-reply-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 1rem;
+}
+.qanda-reply-form input {
+    flex-grow: 1;
+    border-radius: 18px;
+    background-color: #f0f2f5;
+    border: none;
+    font-size: 0.9rem;
+}
+.qanda-reply-form input:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 2px var(--bs-primary-bg-subtle);
+}

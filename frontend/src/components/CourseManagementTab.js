@@ -1,41 +1,44 @@
 // src/components/CourseManagementTab.js
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap'; // Thêm imports
+import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import AddCourseModal from './AddCourseModal';
-import AdminPagination from './AdminPagination'; // Import
+import AdminPagination from './AdminPagination';
+import ConfirmDeleteModal from './ConfirmDeleteModal'; // <-- 1. IMPORT MODAL MỚI
 
 const CourseManagementTab = () => {
     const [courses, setCourses] = useState([]);
-    const [instructors, setInstructors] = useState([]); // State cho danh sách giảng viên (bộ lọc)
+    const [instructors, setInstructors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const { token } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // State cho modal
     const [showAddModal, setShowAddModal] = useState(false);
 
-    // State cho tìm kiếm, lọc, phân trang
+    // --- 2. THÊM STATE CHO MODAL XÓA ---
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingCourseId, setDeletingCourseId] = useState(null);
+    // ------------------------------------
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterInstructor, setFilterInstructor] = useState('all'); // 'all' hoặc instructor_id
+    const [filterInstructor, setFilterInstructor] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [limit] = useState(10);
 
-    // Fetch danh sách giảng viên để làm bộ lọc
+    // ... (Giữ nguyên các hàm: fetchInstructorsForFilter, fetchCourses, useEffect, handlePageChange, handleSearch, handleFilterChange, handleSearchInputChange, handleSearchKeyPress, handleEdit) ...
     const fetchInstructorsForFilter = useCallback(async () => {
         if (!token) return;
         try {
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-            const res = await axios.get('/api/admin/instructors', config); // API lấy danh sách giảng viên
+            const res = await axios.get('/api/admin/instructors', config);
             setInstructors(res.data);
         } catch (err) {
             console.error('Không thể tải danh sách giảng viên cho bộ lọc.');
-            // Không set lỗi ở đây để không ảnh hưởng đến việc tải khóa học
         }
     }, [token]);
 
@@ -49,10 +52,10 @@ const CourseManagementTab = () => {
                     page,
                     limit,
                     search: search.trim(),
-                    filter: filter // filter là instructor_id
+                    filter: filter 
                 }
             };
-            const res = await axios.get('/api/admin/courses', config); // API lấy khóa học đã cập nhật
+            const res = await axios.get('/api/admin/courses', config);
             setCourses(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
             setCurrentPage(res.data.pagination.currentPage);
@@ -70,13 +73,12 @@ const CourseManagementTab = () => {
 
     useEffect(() => {
         if (token) {
-            fetchInstructorsForFilter(); // Tải danh sách giảng viên trước
+            fetchInstructorsForFilter();
             fetchCourses(currentPage, searchTerm, filterInstructor);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, currentPage, filterInstructor]); // Trigger khi token, trang hoặc bộ lọc thay đổi
+    }, [token, currentPage, filterInstructor]); 
 
-    // Handlers tương tự UserManagementTab
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -89,7 +91,6 @@ const CourseManagementTab = () => {
      const handleFilterChange = (e) => {
         setFilterInstructor(e.target.value);
         setCurrentPage(1);
-        // fetchCourses sẽ tự gọi lại trong useEffect
     };
 
     const handleSearchInputChange = (e) => {
@@ -101,28 +102,36 @@ const CourseManagementTab = () => {
             handleSearch();
         }
     };
-
-    // Hàm điều hướng và xóa giữ nguyên
+    
     const handleEdit = (courseId) => {
         navigate(`/courses/${courseId}/edit`);
     };
 
-    const handleDelete = async (courseId) => {
-        if (window.confirm(`Bạn chắc chắn muốn xóa khóa học ID: ${courseId} và tất cả bài học liên quan?`)) {
-            try {
-                setError('');
-                const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                await axios.delete(`/api/admin/courses/${courseId}`, config);
-                fetchCourses(currentPage, searchTerm, filterInstructor); // Tải lại trang hiện tại
-            } catch (err) {
-                setError(err.response?.data?.msg || 'Xóa khóa học thất bại.');
-            }
+    // --- 3. SỬA LẠI HÀM XÓA ---
+    const handleDelete = (courseId) => {
+        setDeletingCourseId(courseId);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!deletingCourseId) return;
+        try {
+            setError('');
+            const config = { headers: { 'Authorization': `Bearer ${token}` } };
+            await axios.delete(`/api/admin/courses/${deletingCourseId}`, config);
+            fetchCourses(currentPage, searchTerm, filterInstructor); // Tải lại
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Xóa khóa học thất bại.');
+        } finally {
+            setShowDeleteModal(false);
+            setDeletingCourseId(null);
         }
     };
+    // ----------------------------
 
     return (
         <>
-            {/* Thanh công cụ */}
+            {/* Thanh công cụ (Giữ nguyên) */}
              <Row className="mb-3 g-2 align-items-center">
                 <Col md="auto">
                     <Button variant="primary" onClick={() => setShowAddModal(true)}>+ Thêm khóa học</Button>
@@ -155,13 +164,13 @@ const CourseManagementTab = () => {
 
             {error && <Alert variant="danger">{error}</Alert>}
 
-            {/* Thông tin tổng số và loading */}
+            {/* Thông tin tổng số và loading (Giữ nguyên) */}
              <div className="d-flex justify-content-between align-items-center mb-2">
                  <small className="text-muted">Hiển thị {courses.length} trên tổng số {totalItems} khóa học</small>
                  {loading && <Spinner animation="border" size="sm" />}
             </div>
 
-            {/* Bảng dữ liệu */}
+            {/* Bảng dữ liệu (Giữ nguyên) */}
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -182,6 +191,7 @@ const CourseManagementTab = () => {
                             <td>
                                 <ButtonGroup size="sm">
                                     <Button variant="outline-primary" onClick={() => handleEdit(course.id)} title="Sửa"><i className="bi bi-pencil-fill"></i></Button>
+                                    {/* 4. Sửa nút Xóa */}
                                     <Button variant="outline-danger" onClick={() => handleDelete(course.id)} title="Xóa"><i className="bi bi-trash-fill"></i></Button>
                                 </ButtonGroup>
                             </td>
@@ -202,16 +212,24 @@ const CourseManagementTab = () => {
                 </tbody>
             </Table>
 
-            {/* Phân trang */}
+            {/* Phân trang (Giữ nguyên) */}
             <AdminPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
 
-            {/* Modal thêm mới */}
+            {/* Modal thêm mới (Giữ nguyên) */}
             <AddCourseModal show={showAddModal} handleClose={() => setShowAddModal(false)} onCourseAdded={() => fetchCourses(1)} />
-            {/* Không cần EditCourseModal vì đã điều hướng sang trang riêng */}
+
+            {/* 5. THÊM MODAL XÁC NHẬN VÀO CUỐI */}
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                title="Xác nhận Xóa Khóa học"
+                message={`Bạn chắc chắn muốn xóa khóa học ID: ${deletingCourseId}? Hành động này sẽ xóa TẤT CẢ bài học, bình luận, và dữ liệu ghi danh liên quan.`}
+            />
         </>
     );
 };

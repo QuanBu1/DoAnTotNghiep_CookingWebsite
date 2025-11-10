@@ -1,15 +1,16 @@
 // src/components/UserManagementTab.js
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap'; // Thêm Form, InputGroup, Row, Col, Spinner
+import { Table, Button, Alert, ButtonGroup, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import AddUserModal from './AddUserModal';
 import EditUserModal from './EditUserModal';
-import AdminPagination from './AdminPagination'; // Import component phân trang
+import AdminPagination from './AdminPagination';
+import ConfirmDeleteModal from './ConfirmDeleteModal'; // <-- 1. IMPORT MODAL MỚI
 
 const UserManagementTab = () => {
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true); // Thêm state loading
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const { token } = useContext(AuthContext);
 
@@ -18,104 +19,113 @@ const UserManagementTab = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editingUserId, setEditingUserId] = useState(null);
 
-    // State cho tìm kiếm, lọc và phân trang
+    // --- 2. THÊM STATE CHO MODAL XÓA ---
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingUserId, setDeletingUserId] = useState(null);
+    // ------------------------------------
+
+    // State cho tìm kiếm, lọc và phân trang (giữ nguyên)
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterRole, setFilterRole] = useState('all'); // 'all', 'student', 'instructor', 'admin'
+    const [filterRole, setFilterRole] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [totalItems, setTotalItems] = useState(0); // Thêm tổng số items
-    const [limit] = useState(10); // Số lượng item mỗi trang
+    const [totalItems, setTotalItems] = useState(0);
+    const [limit] = useState(10);
 
-    // useCallback để tránh tạo lại hàm fetchUsers mỗi lần render
     const fetchUsers = useCallback(async (page = 1, search = searchTerm, filter = filterRole) => {
-        setLoading(true); // Bắt đầu loading
+        setLoading(true); 
         try {
             setError('');
             const config = {
                 headers: { 'Authorization': `Bearer ${token}` },
-                params: { // Gửi các tham số qua query params
+                params: { 
                     page,
                     limit,
                     search: search.trim(),
                     filter: filter
                 }
             };
-            const res = await axios.get('/api/admin/users', config); // API đã cập nhật ở backend
+            const res = await axios.get('/api/admin/users', config); 
             setUsers(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
             setCurrentPage(res.data.pagination.currentPage);
-            setTotalItems(res.data.pagination.totalItems); // Lưu tổng số users
+            setTotalItems(res.data.pagination.totalItems); 
         } catch (err) {
             setError('Không thể tải danh sách người dùng.');
-            setUsers([]); // Reset data khi lỗi
+            setUsers([]); 
             setTotalPages(1);
             setCurrentPage(1);
             setTotalItems(0);
         } finally {
-            setLoading(false); // Kết thúc loading
+            setLoading(false); 
         }
-    }, [token, limit, searchTerm, filterRole]); // Thêm searchTerm, filterRole vào dependencies
+    }, [token, limit, searchTerm, filterRole]); 
 
-    // useEffect để gọi fetchUsers khi component mount hoặc các state dependency thay đổi
     useEffect(() => {
         if (token) {
             fetchUsers(currentPage, searchTerm, filterRole);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, currentPage, filterRole]); // Bỏ fetchUsers ra vì nó đã dùng useCallback
+    }, [token, currentPage, filterRole]); 
 
-    // Handler cho thay đổi trang
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-        // fetchUsers sẽ tự động được gọi lại do currentPage thay đổi trong useEffect
     };
 
-    // Handler cho tìm kiếm (khi nhấn Enter hoặc nút Tìm)
     const handleSearch = () => {
-        setCurrentPage(1); // Reset về trang 1 khi tìm kiếm
-        fetchUsers(1, searchTerm, filterRole); // Gọi fetch với từ khóa mới
+        setCurrentPage(1); 
+        fetchUsers(1, searchTerm, filterRole); 
     };
 
-    // Handler cho thay đổi bộ lọc
     const handleFilterChange = (e) => {
         setFilterRole(e.target.value);
-        setCurrentPage(1); // Reset về trang 1 khi lọc
-        // fetchUsers sẽ tự động được gọi lại do filterRole thay đổi trong useEffect
+        setCurrentPage(1); 
     };
 
-    // Handler cho input tìm kiếm (chỉ cập nhật state, không gọi API ngay)
     const handleSearchInputChange = (e) => {
         setSearchTerm(e.target.value);
     };
-    // Xử lý khi nhấn Enter trong ô tìm kiếm
+    
     const handleSearchKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSearch();
         }
     };
-
-    // Các hàm xử lý modal giữ nguyên
+    
     const handleEdit = (userId) => {
         setEditingUserId(userId);
         setShowEditModal(true);
     };
 
-    const handleDelete = async (userId) => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa người dùng ID: ${userId}?`)) {
-            try {
-                const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                await axios.delete(`/api/admin/users/${userId}`, config);
-                // Tải lại trang hiện tại sau khi xóa
-                fetchUsers(currentPage, searchTerm, filterRole);
-            } catch (err) {
-                setError(err.response?.data?.msg || 'Xóa người dùng thất bại.');
-            }
+
+    // --- 3. SỬA LẠI HÀM XÓA ---
+    // Hàm này chỉ mở modal
+    const handleDelete = (userId) => {
+        setDeletingUserId(userId); // Lưu ID của người dùng sẽ bị xóa
+        setShowDeleteModal(true);   // Mở modal xác nhận
+    };
+
+    // Hàm này thực hiện logic xóa sau khi người dùng xác nhận
+    const confirmDelete = async () => {
+        if (!deletingUserId) return; // Kiểm tra an toàn
+
+        try {
+            const config = { headers: { 'Authorization': `Bearer ${token}` } };
+            await axios.delete(`/api/admin/users/${deletingUserId}`, config);
+            // Tải lại trang hiện tại sau khi xóa
+            fetchUsers(currentPage, searchTerm, filterRole);
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Xóa người dùng thất bại.');
+        } finally {
+            setShowDeleteModal(false); // Đóng modal
+            setDeletingUserId(null);   // Reset ID
         }
     };
+    // ----------------------------
 
     return (
         <>
-            {/* Thanh công cụ: Thêm mới, Lọc, Tìm kiếm */}
+            {/* Thanh công cụ: Thêm mới, Lọc, Tìm kiếm (Giữ nguyên) */}
             <Row className="mb-3 g-2 align-items-center">
                 <Col md="auto">
                     <Button variant="primary" onClick={() => setShowAddModal(true)}>+ Thêm người dùng</Button>
@@ -137,7 +147,7 @@ const UserManagementTab = () => {
                             placeholder="Tìm theo tên hoặc email..."
                             value={searchTerm}
                             onChange={handleSearchInputChange}
-                            onKeyPress={handleSearchKeyPress} // Thêm xử lý Enter
+                            onKeyPress={handleSearchKeyPress} 
                         />
                         <Button variant="outline-secondary" onClick={handleSearch}>
                             <i className="bi bi-search"></i> Tìm
@@ -148,13 +158,13 @@ const UserManagementTab = () => {
 
             {error && <Alert variant="danger">{error}</Alert>}
 
-            {/* Hiển thị thông tin tổng số và loading */}
+            {/* Hiển thị thông tin tổng số và loading (Giữ nguyên) */}
             <div className="d-flex justify-content-between align-items-center mb-2">
                 <small className="text-muted">Hiển thị {users.length} trên tổng số {totalItems} người dùng</small>
                 {loading && <Spinner animation="border" size="sm" />}
             </div>
 
-            {/* Bảng dữ liệu */}
+            {/* Bảng dữ liệu (Giữ nguyên) */}
             <Table striped bordered hover responsive>
                  <thead>
                     <tr>
@@ -167,7 +177,6 @@ const UserManagementTab = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* Chỉ hiển thị khi không loading và có dữ liệu */}
                     {!loading && users.map(user => (
                         <tr key={user.id}>
                             <td>{user.id}</td>
@@ -178,12 +187,12 @@ const UserManagementTab = () => {
                             <td>
                                 <ButtonGroup size="sm">
                                     <Button variant="outline-primary" onClick={() => handleEdit(user.id)} title="Sửa"><i className="bi bi-pencil-fill"></i></Button>
+                                    {/* 4. Đảm bảo nút xóa gọi đúng hàm `handleDelete` mới */}
                                     <Button variant="outline-danger" onClick={() => handleDelete(user.id)} title="Xóa"><i className="bi bi-trash-fill"></i></Button>
                                 </ButtonGroup>
                             </td>
                         </tr>
                     ))}
-                    {/* Hiển thị khi loading */}
                     {loading && (
                         <tr>
                             <td colSpan="6" className="text-center">
@@ -191,7 +200,6 @@ const UserManagementTab = () => {
                             </td>
                         </tr>
                     )}
-                    {/* Hiển thị khi không có kết quả */}
                     {!loading && users.length === 0 && (
                         <tr>
                             <td colSpan="6" className="text-center text-muted">Không tìm thấy người dùng nào.</td>
@@ -200,7 +208,7 @@ const UserManagementTab = () => {
                 </tbody>
             </Table>
 
-            {/* Component Phân trang */}
+            {/* Component Phân trang (Giữ nguyên) */}
             <AdminPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -210,6 +218,15 @@ const UserManagementTab = () => {
             {/* Modals (giữ nguyên) */}
             <AddUserModal show={showAddModal} handleClose={() => setShowAddModal(false)} onUserAdded={() => fetchUsers(1)} />
             <EditUserModal show={showEditModal} handleClose={() => setShowEditModal(false)} userId={editingUserId} onUserUpdated={() => fetchUsers(currentPage, searchTerm, filterRole)} />
+            
+            {/* 5. THÊM MODAL XÁC NHẬN VÀO CUỐI */}
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                title="Xác nhận Xóa Người dùng"
+                message={`Bạn có chắc chắn muốn xóa vĩnh viễn người dùng ID: ${deletingUserId}? Mọi dữ liệu liên quan (khóa học, bình luận...) sẽ bị xóa.`}
+            />
         </>
     );
 };

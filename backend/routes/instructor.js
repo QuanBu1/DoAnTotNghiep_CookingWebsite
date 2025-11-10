@@ -24,4 +24,10 @@ router.put(
     instructorController.gradeSubmission
 );
 
+// === ROUTE MỚI CHO TRANG BÌNH LUẬN ===
+router.get(
+    '/comments',
+    [authMiddleware, instructorMiddleware],
+    instructorController.getInstructorComments
+);
 module.exports = router;

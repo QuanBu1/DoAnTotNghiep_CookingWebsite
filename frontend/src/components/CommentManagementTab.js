@@ -1,10 +1,11 @@
 // src/components/CommentManagementTab.js
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Table, Button, Alert, Badge, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap'; // Thêm imports
+import { Table, Button, Alert, Badge, Form, InputGroup, Row, Col, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
-import AdminPagination from './AdminPagination'; // Import
+import AdminPagination from './AdminPagination';
+import ConfirmDeleteModal from './ConfirmDeleteModal'; // Import modal
 
 const CommentManagementTab = () => {
     const [comments, setComments] = useState([]);
@@ -12,14 +13,18 @@ const CommentManagementTab = () => {
     const [error, setError] = useState('');
     const { token } = useContext(AuthContext);
 
-    // State cho tìm kiếm, lọc, phân trang
+    // State cho modal xóa (giữ nguyên)
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingComment, setDeletingComment] = useState(null); // { type, id }
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterType, setFilterType] = useState('all'); // 'all', 'thread', 'reply'
+    const [filterType, setFilterType] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [limit] = useState(10);
 
+    // ... (Giữ nguyên các hàm: fetchComments, useEffect, handlePageChange, handleSearch, handleFilterChange, handleSearchInputChange, handleSearchKeyPress) ...
     const fetchComments = useCallback(async (page = 1, search = searchTerm, filter = filterType) => {
         setLoading(true);
         try {
@@ -30,10 +35,10 @@ const CommentManagementTab = () => {
                     page,
                     limit,
                     search: search.trim(),
-                    filter // filter là type
+                    filter
                 }
             };
-            const res = await axios.get('/api/admin/comments', config); // API đã cập nhật
+            const res = await axios.get('/api/admin/comments', config); 
             setComments(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
             setCurrentPage(res.data.pagination.currentPage);
@@ -54,9 +59,8 @@ const CommentManagementTab = () => {
             fetchComments(currentPage, searchTerm, filterType);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, currentPage, filterType]); // Fetch khi token, trang, hoặc bộ lọc thay đổi
+    }, [token, currentPage, filterType]);
 
-    // Handlers tương tự
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -81,24 +85,33 @@ const CommentManagementTab = () => {
         }
     };
 
-    // Hàm xóa giữ nguyên
-    const handleDelete = async (type, id) => {
-        if (window.confirm(`Bạn có chắc chắn muốn xóa bình luận (${type}) ID: ${id}?`)) {
-            try {
-                const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`/api/admin/comments/${type}/${id}`, config);
-                fetchComments(currentPage, searchTerm, filterType); // Tải lại trang hiện tại
-            } catch (err) {
-                setError(err.response?.data?.msg || 'Xóa bình luận thất bại.');
-            }
+    // Hàm mở modal xóa (Giữ nguyên)
+    const handleDelete = (type, id) => {
+        setDeletingComment({ type, id });
+        setShowDeleteModal(true);
+    };
+
+    // Hàm xác nhận xóa (Giữ nguyên)
+    const confirmDelete = async () => {
+        if (!deletingComment) return;
+        const { type, id } = deletingComment;
+
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.delete(`/api/admin/comments/${type}/${id}`, config);
+            fetchComments(currentPage, searchTerm, filterType); // Tải lại
+        } catch (err) {
+            setError(err.response?.data?.msg || 'Xóa bình luận thất bại.');
+        } finally {
+            setShowDeleteModal(false);
+            setDeletingComment(null);
         }
     };
 
     return (
         <>
-            {/* Thanh công cụ */}
+            {/* Thanh công cụ (Giữ nguyên) */}
             <Row className="mb-3 g-2 align-items-center">
-                 {/* Bộ lọc theo Loại */}
                 <Col md={3}>
                     <Form.Group controlId="commentFilterType">
                         <Form.Select value={filterType} onChange={handleFilterChange}>
@@ -108,7 +121,6 @@ const CommentManagementTab = () => {
                         </Form.Select>
                     </Form.Group>
                 </Col>
-                 {/* Tìm kiếm */}
                 <Col>
                      <InputGroup>
                         <Form.Control
@@ -127,13 +139,13 @@ const CommentManagementTab = () => {
 
             {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 
-             {/* Thông tin tổng số và loading */}
+             {/* Thông tin tổng số và loading (Giữ nguyên) */}
              <div className="d-flex justify-content-between align-items-center mb-2">
                  <small className="text-muted">Hiển thị {comments.length} trên tổng số {totalItems} bình luận</small>
                  {loading && <Spinner animation="border" size="sm" />}
             </div>
 
-            {/* Bảng dữ liệu */}
+            {/* Bảng dữ liệu (Giữ nguyên) */}
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -156,7 +168,6 @@ const CommentManagementTab = () => {
                                     : <Badge bg="secondary">Trả lời</Badge>
                                 }
                             </td>
-                            {/* Giữ lại style để nội dung dài không bị vỡ layout */}
                             <td style={{ maxWidth: '300px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{comment.text}</td>
                             <td>{comment.author}</td>
                             <td>{new Date(comment.created_at).toLocaleString('vi-VN')}</td>
@@ -192,11 +203,36 @@ const CommentManagementTab = () => {
                 </tbody>
             </Table>
 
-            {/* Phân trang */}
+             {/* Phân trang (Giữ nguyên) */}
              <AdminPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
+            />
+
+            {/* === PHẦN SỬA ĐỔI NẰM Ở ĐÂY === */}
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                title="Xác nhận Xóa Bình luận"
+                message={
+                    <>
+                        {/* Sử dụng JSX (thẻ React) thay vì string 
+                            để định dạng thông báo đẹp hơn.
+                        */}
+                        <p className="mb-0">
+                            Bạn có chắc chắn muốn xóa mục này (ID: {deletingComment?.id})?
+                        </p>
+                        
+                        {/* Chỉ hiển thị cảnh báo này nếu là 'câu hỏi' */}
+                        {deletingComment?.type === 'thread' && (
+                            <small className="text-danger d-block mt-2">
+                                <strong>Lưu ý:</strong> Đây là một <strong>câu hỏi</strong>. Xóa nó cũng sẽ xóa vĩnh viễn tất cả các câu trả lời bên trong.
+                            </small>
+                        )}
+                    </>
+                }
             />
         </>
     );

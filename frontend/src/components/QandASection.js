@@ -1,22 +1,41 @@
 // src/components/QandASection.js
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
-import { Card, Form, Button, Badge, Alert, Spinner, Stack } from 'react-bootstrap';
+import { Card, Form, Button, Badge, Alert, Spinner } from 'react-bootstrap';
 import AuthContext from '../context/AuthContext';
+import './QandASection.css'; // <-- 1. IMPORT TỆP CSS MỚI
+
+// === 2. THÊM HÀM TẠO AVATAR ===
+const getInitials = (name) => {
+    if (!name) return 'B';
+    const names = name.split(' ');
+    const firstName = names[0];
+    const lastName = names.length > 1 ? names[names.length - 1] : '';
+    return `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
+};
+
+// === 3. COMPONENT AVATAR ===
+const QAvatar = ({ name, role }) => (
+    <div className={`qanda-avatar ${role === 'student' ? 'student' : 'instructor'}`}>
+        {getInitials(name)}
+    </div>
+);
 
 // Component con để hiển thị một bình luận/trả lời
 const Reply = ({ reply }) => (
-    <div className="d-flex mt-3">
-        <div className="flex-shrink-0 me-2">
-            {/* Có thể thêm avatar ở đây sau */}
-        </div>
-        <div className="flex-grow-1">
-            <div className="bg-light rounded p-2">
-                <strong>{reply.user_name}</strong>
-                {['instructor', 'admin'].includes(reply.user_role) && <Badge bg="success" className="ms-2">{reply.user_role}</Badge>}
-                <p className="mb-0 small">{reply.reply_text}</p>
+    <div className="qanda-reply">
+        <QAvatar name={reply.user_name} role={reply.user_role} />
+        <div className="qanda-content">
+            <div className="qanda-content-bubble">
+                <span className="qanda-author">{reply.user_name}</span>
+                {['instructor', 'admin'].includes(reply.user_role) && (
+                    <Badge bg="success" className="ms-1">{reply.user_role}</Badge>
+                )}
+                <p>{reply.reply_text}</p>
             </div>
-            <small className="text-muted ms-2">{new Date(reply.created_at).toLocaleString('vi-VN')}</small>
+            <div className="qanda-meta">
+                <small>{new Date(reply.created_at).toLocaleString('vi-VN')}</small>
+            </div>
         </div>
     </div>
 );
@@ -39,12 +58,12 @@ const ReplyForm = ({ threadId, courseId, fetchThreads }) => {
     };
     
     return (
-        <Form onSubmit={handleSubmit} className="d-flex mt-2">
+        <Form onSubmit={handleSubmit} className="qanda-reply-form">
             <Form.Control 
                 size="sm"
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Viết bình luận..."
+                placeholder="Viết trả lời..."
                 required
             />
             <Button type="submit" variant="primary" size="sm" className="ms-2">Gửi</Button>
@@ -107,10 +126,10 @@ const QandASection = ({ courseId, lessonId }) => {
     };
 
     return (
-        <Card className="mt-4">
-            <Card.Header as="h4">Bình luận</Card.Header>
+        <Card className="qanda-section-card">
+            {/* 4. LOẠI BỎ CARD.HEADER */}
             <Card.Body>
-                <Form onSubmit={handleQuestionSubmit} className="mb-4">
+                <Form onSubmit={handleQuestionSubmit} className="mb-4 qanda-post-form">
                     <Form.Group>
                         <Form.Control 
                             as="textarea" 
@@ -121,38 +140,57 @@ const QandASection = ({ courseId, lessonId }) => {
                             required
                         />
                     </Form.Group>
-                    <Button type="submit" variant="primary" className="mt-2">Gửi bình luận</Button>
+                    <Button type="submit" variant="primary" className="mt-2">Gửi câu hỏi</Button>
                 </Form>
                 {error && <Alert variant="danger">{error}</Alert>}
+                
                 {loading ? <div className="text-center"><Spinner animation="border" /></div> : (
-                    <Stack gap={4}>
+                    <div className="qanda-thread-list">
                         {threads.length > 0 ? threads.map(thread => (
-                            <div key={thread.id}>
+                            <div key={thread.id} className="qanda-thread">
                                 {/* Câu hỏi gốc */}
-                                <div className="d-flex">
-                                    <div className="flex-grow-1">
-                                        <strong>{thread.user_name}</strong>
-                                        {['instructor', 'admin'].includes(thread.user_role) && <Badge bg="info" className="ms-2">{thread.user_role}</Badge>}
-                                        <p>{thread.question_text}</p>
-                                        <div className="d-flex align-items-center">
-                                            <Button variant="link" size="sm" className="p-0 text-decoration-none" onClick={() => handleLikeClick(thread.id)}>
-                                                {thread.user_has_liked ? <b>Thích</b> : 'Thích'}
-                                            </Button>
-                                            <span className="text-muted mx-2">·</span>
-                                            <small className="text-muted">{new Date(thread.created_at).toLocaleString('vi-VN')}</small>
-                                        </div>
-                                        {thread.like_count > 0 && <div className="mt-1 text-muted small"><i className="bi bi-hand-thumbs-up-fill"></i> {thread.like_count}</div>}
-                                    </div>
-                                </div>
+                                <QAvatar name={thread.user_name} role={thread.user_role} />
                                 
-                                {/* Các câu trả lời */}
-                                <div className="ps-5">
-                                    {thread.replies.map(reply => <Reply key={reply.id} reply={reply} />)}
-                                    <ReplyForm threadId={thread.id} courseId={courseId} fetchThreads={fetchThreads} />
+                                <div className="qanda-content">
+                                    <div className="qanda-content-bubble">
+                                        <span className="qanda-author">{thread.user_name}</span>
+                                        {['instructor', 'admin'].includes(thread.user_role) && (
+                                            <Badge bg="info" className="ms-1">{thread.user_role}</Badge>
+                                        )}
+                                        <p>{thread.question_text}</p>
+                                    </div>
+
+                                    <div className="qanda-meta">
+                                        <Button 
+                                            variant="link" 
+                                            size="sm" 
+                                            className={thread.user_has_liked ? 'liked' : ''}
+                                            onClick={() => handleLikeClick(thread.id)}
+                                        >
+                                            {thread.user_has_liked ? 'Đã thích' : 'Thích'}
+                                        </Button>
+                                        <span className="text-muted">·</span>
+                                        <small className="text-muted">{new Date(thread.created_at).toLocaleString('vi-VN')}</small>
+                                        {thread.like_count > 0 && (
+                                            <>
+                                                <span className="text-muted">·</span>
+                                                <span className="like-count">
+                                                    <i className="bi bi-hand-thumbs-up-fill me-1"></i> 
+                                                    {thread.like_count}
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Các câu trả lời */}
+                                    <div className="qanda-replies">
+                                        {thread.replies.map(reply => <Reply key={reply.id} reply={reply} />)}
+                                        <ReplyForm threadId={thread.id} courseId={courseId} fetchThreads={fetchThreads} />
+                                    </div>
                                 </div>
                             </div>
                         )) : <p>Chưa có bình luận nào. Hãy là người đầu tiên!</p>}
-                    </Stack>
+                    </div>
                 )}
             </Card.Body>
         </Card>

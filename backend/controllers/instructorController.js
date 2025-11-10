@@ -116,3 +116,41 @@ exports.gradeSubmission = async (req, res) => {
         client.release();
     }
 };
+/**
+ * @route   GET /api/instructor/comments
+ * @desc    Giảng viên lấy TẤT CẢ bình luận (hỏi đáp) từ các khóa học của mình
+ * @access  Private (Instructor)
+ */
+exports.getInstructorComments = async (req, res) => {
+    const instructorId = req.user.id;
+    try {
+        // Sử dụng truy vấn tương tự Admin nhưng lọc theo instructor_id
+        // và chỉ lấy các bình luận không phải của chính giảng viên
+        const combinedQuery = `
+            SELECT 'thread' as type, t.id, t.question_text as text, u.full_name as author, t.created_at, l.title as lesson_title, c.id as course_id, l.id as lesson_id
+            FROM q_and_a_threads t
+            JOIN users u ON t.user_id = u.id
+            JOIN lessons l ON t.lesson_id = l.id
+            JOIN courses c ON l.course_id = c.id
+            WHERE c.instructor_id = $1 AND t.user_id != $1
+            UNION ALL
+            SELECT 'reply' as type, r.id, r.reply_text as text, u.full_name as author, r.created_at, l.title as lesson_title, c.id as course_id, l.id as lesson_id
+            FROM q_and_a_replies r
+            JOIN users u ON r.user_id = u.id
+            JOIN q_and_a_threads t ON r.thread_id = t.id
+            JOIN lessons l ON t.lesson_id = l.id
+            JOIN courses c ON l.course_id = c.id
+            WHERE c.instructor_id = $1 AND r.user_id != $1
+        `;
+
+        const dataResult = await pool.query(
+            `SELECT * FROM (${combinedQuery}) AS combined ORDER BY created_at DESC LIMIT 50`, // Giới hạn 50 bình luận mới nhất
+            [instructorId]
+        );
+
+        res.json(dataResult.rows);
+    } catch (err) {
+        console.error("Lỗi khi lấy danh sách bình luận của giảng viên:", err.message);
+        res.status(500).send('Lỗi server');
+    }
+};
